@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra de Ingressos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Compra de Ingressos para o Cinema</h1>
+    <form id="ingressoForm">
+        <label for="filme">Escolha o Filme:</label>
+        <select id="filme" required>
+            <option value="">Selecione um Filme</option>
+            <option value="Deadpool & Wolverine">Deadpool & Wolverine</option>
+            <option value="É assim que acaba">É assim que acaba</option>
+            <option value="Shrek 12">Shrek 12</option>
+        </select>
+        
+        <label for="data">Data:</label>
+        <input type="date" id="data" required>
+
+        <label for="sala">Sala:</label>
+        <select id="sala" required>
+            <option value="">Selecione uma Sala</option>
+            <option value="sala1">Sala 1</option>
+            <option value="sala2">Sala 2</option>
+            <option value="sala3">Sala 3</option>
+        </select>
+        
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" placeholder="Seu Nome" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Seu Email" required>
+        
+        <label for="quantidade">Quantidade de Ingressos:</label>
+        <input type="number" id="quantidade" min="1" value="1" required>
+        
+        <button type="submit">Comprar Ingressos</button>
+    </form>
+    <h2>Ingressos Comprados</h2>
+    <ul id="listaIngressos"></ul>
+    <script>
+    document.getElementById('ingressoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const filme = document.getElementById('filme').value;
+        const data = document.getElementById('data').value;
+        const sala = document.getElementById('sala').value;
+        const nome = document.getElementById('nome').value;
+        const email = document.getElementById('email').value;
+        const quantidade = document.getElementById('quantidade').value;
+
+        if(filme && data && sala && nome && email && quantidade) {
+            const ingresso = { filme, data, sala, nome, email, quantidade };
+            adicionarIngresso(ingresso);
+            salvarIngressoLocalStorage(ingresso);
+            document.getElementById('ingressoForm').reset();
+        }
+    });
+
+    function adicionarIngresso(ingresso) {
+        const lista = document.getElementById('listaIngressos');
+        const item = document.createElement('li');
+        item.innerHTML = `
+            <span>${ingresso.filme} - ${new Date(ingresso.data).toLocaleDateString()} - ${ingresso.sala} - ${ingresso.nome} - ${ingresso.email} - ${ingresso.quantidade} ingresso(s)</span>
+        `;
+        lista.appendChild(item);
+    }
+
+    function salvarIngressoLocalStorage(ingresso) {
+        let ingressos = JSON.parse(localStorage.getItem('ingressos')) || [];
+        ingressos.push(ingresso);
+        localStorage.setItem('ingressos', JSON.stringify(ingressos));
+        const event = new Event('storage');
+        window.dispatchEvent(event);
+    }
+
+    function carregarIngressos() {
+        const ingressos = JSON.parse(localStorage.getItem('ingressos')) || [];
+        ingressos.forEach(ingresso => adicionarIngresso(ingresso));
+    }
+
+    carregarIngressos();
+    </script>
+</body>
+</html>

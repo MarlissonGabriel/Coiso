@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingressos Comprados</title>
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+    <h1>Ingressos Comprados</h1>
+    <ul id="listaIngressos"></ul>
+    <script>
+    function adicionarIngresso(ingresso) {
+        const lista = document.getElementById('listaIngressos');
+        const item = document.createElement('li');
+        item.innerHTML = `
+            <span>${ingresso.filme} - ${new Date(ingresso.data).toLocaleDateString()} - ${ingresso.sala} - ${ingresso.nome} - ${ingresso.email} - ${ingresso.quantidade} ingresso(s)</span>
+        `;
+        lista.appendChild(item);
+    }
+
+    function carregarIngressos() {
+        const ingressos = JSON.parse(localStorage.getItem('ingressos')) || [];
+        listaIngressos.innerHTML = ''; // Limpa a lista antes de recarregar
+        ingressos.forEach(ingresso => adicionarIngresso(ingresso));
+    }
+
+    // Carrega ingressos ao carregar a página
+    carregarIngressos();
+
+    // Atualiza a lista de ingressos quando o evento de armazenamento é disparado
+    window.addEventListener('storage', function(event) {
+        carregarIngressos();
+    });
+    </script>
+</body>
+</html>
